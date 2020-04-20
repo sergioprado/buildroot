@@ -1,0 +1,92 @@
+From 49d5360096f0015313b54f3d758b7c0249c44218 Mon Sep 17 00:00:00 2001
+From: bkuhls <bkuhls@users.noreply.github.com>
+Date: Mon, 30 Sep 2019 16:37:58 +0200
+Subject: [PATCH] Fix test build without libjpeg/tiff (#597)
+
+* testjpegcodec depends on libjpeg
+
+* testtiffcodec depends on tiff
+---
+ configure.ac      |  2 ++
+ tests/Makefile.am | 21 +++++++++++++++++----
+ 2 files changed, 19 insertions(+), 4 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 5726c20e0b2e..71b0edef603f 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -292,6 +292,7 @@ if test x$JPEG != x; then
+ else
+   jpeg_ok="no (Get it from http://freshmeat.net/projects/libjpeg)"
+ fi
++AM_CONDITIONAL(HAVE_LIBJPEG, test x$JPEG != x)
+ 
+ dnl Test for libtiff
+ AC_ARG_WITH([libtiff],
+@@ -327,6 +328,7 @@ if test x$TIFF != x; then
+ else
+   tiff_ok="no (Get it from http://www.libtiff.org/)"
+ fi
++AM_CONDITIONAL(HAVE_LIBTIFF, test x$TIFF != x)
+ 
+ dnl Test for libgif or libungif
+ AC_ARG_WITH([libgif],
+diff --git a/tests/Makefile.am b/tests/Makefile.am
+index 67c197c3a6f5..6a27f328d5ed 100644
+--- a/tests/Makefile.am
++++ b/tests/Makefile.am
+@@ -35,15 +35,22 @@ noinst_PROGRAMS =			\
+ 	testhatchbrush \
+ 	testicocodec \
+ 	testimageattributes \
+-	testjpegcodec testlineargradientbrush \
++	testlineargradientbrush \
+ 	testmatrix testmetafile testpathgradientbrush \
+ 	testpen testpng testpngcodec testregion testreversepath testsolidbrush \
+ 	teststringformat \
+ 	testtext \
+ 	testtexturebrush \
+-	testtiffcodec \
+ 	testwmfcodec
+ 
++if HAVE_LIBJPEG
++noinst_PROGRAMS += testjpegcodec
++endif HAVE_LIBJPEG
++
++if HAVE_LIBTIFF
++noinst_PROGRAMS += testtiffcodec
++endif HAVE_LIBTIFF
++
+ #if HAVE_X11
+ #noinst_PROGRAMS += testgdi
+ #
+@@ -347,7 +354,6 @@ TESTS = \
+ 	testhatchbrush \
+ 	testicocodec \
+ 	testimageattributes \
+-	testjpegcodec \
+ 	testlineargradientbrush \
+ 	testmatrix \
+ 	testmetafile \
+@@ -361,10 +367,17 @@ TESTS = \
+ 	teststringformat \
+ 	testtexturebrush \
+ 	testtext \
+-	testtiffcodec \
+ 	testwmfcodec \
+ 	$(NULL)
+ 
++if HAVE_LIBJPEG
++TESTS += testjpegcodec
++endif HAVE_LIBJPEG
++
++if HAVE_LIBTIFF
++TESTS += testtiffcodec
++endif HAVE_LIBTIFF
++
+ if HAVE_X11
+ # TESTS += testgdi
+ endif
+-- 
+2.17.1
+
