@@ -1,0 +1,9 @@
+BR2_arm=y
+BR2_cortex_a9=y
+BR2_ARM_ENABLE_NEON=y
+BR2_ARM_ENABLE_VFP=y
+BR2_TOOLCHAIN_BUILDROOT_CXX=y
+BR2_PACKAGE_HOST_GDB=y
+BR2_PACKAGE_HOST_GDB_TUI=y
+BR2_DL_DIR="/home/sprado/workspace/buildroot/downloads"
+BR2_CPAN_MIRROR="http://cpan.metacpan.org"
